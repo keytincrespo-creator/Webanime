@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mundo Otaku & Séries (Blog)</title>
+    <style>
+        /* Variáveis de cores para os Temas Claro e Escuro */
+        :root {
+            --bg-body: #f4f4f9;
+            --bg-container: #ffffff;
+            --bg-header: #E6ACAC;
+            --text-main: #333333;
+            --text-header: #000000;
+            --text-muted: #666666;
+            --border-color: #D2B48C; /* Marrom claro para o contorno */
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --button-bg: #eeeeee;
+            --button-hover: #e0e0e0;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #121212;
+            --bg-container: #1e1e1e;
+            --bg-header: #2d2d2d;
+            --text-main: #f0f0f0;
+            --text-header: #ffffff;
+            --text-muted: #b0b0b0;
+            --border-color: #8B7355; /* Marrom mais escuro para o modo dark */
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            --button-bg: #333333;
+            --button-hover: #444444;
+        }
+
+        /* Configurações Gerais */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            line-height: 1.6;
+        }
+
+        /* Barra de Acessibilidade / Controles */
+        .top-bar {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background-color: var(--button-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--button-hover);
+        }
+
+        /* Cabeçalho */
+        header {
+            background-color: var(--bg-header);
+            color: var(--text-header);
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto 20px auto;
+            padding: 32px 16px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color); /* Contorno marrom no cabeçalho */
+            box-shadow: 0 4px 6px var(--shadow-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            margin: 0 0 10px 0;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        /* Layout em duas colunas com contorno marrom */
+        .blog-container {
+            max-width: 1000px;
+            margin: 0 auto 40px auto;
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+            border: 3px solid var(--border-color); /* Contorno marrom na página principal */
+            border-radius: 16px;
+            background-color: rgba(210, 180, 140, 0.05); /* Fundo sutil para destacar o contorno */
+        }
+
+        /* Conteúdo Principal */
+        main {
+            background-color: var(--bg-container);
+            flex: 3;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            transition: background-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        /* Barra Lateral (Sobre) */
+        aside {
+            background-color: var(--bg-container);
+            flex: 1;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            transition: background-color 0.3s ease;
+            box-sizing: border-box;
+            height: fit-content;
+        }
+
+        aside h3 {
+            margin-top: 0;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        /* Artigos / Posts */
+        article {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        article:last-of-type {
+            border-bottom: none;
+        }
+
+        .post-header-box {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            border: 2px solid var(--border-color);
+        }
+
+        .post-content {
+            flex: 1;
+        }
+
+        article h2 {
+            font-size: 1.5rem;
+            margin: 0 0 8px 0;
+            color: var(--text-main);
+        }
+
+        .artigo-autor {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0 0 12px 0;
+        }
+
+        .post-content p:not(.artigo-autor) {
+            margin: 0 0 16px 0;
+            font-size: 1.05rem;
+        }
+
+        /* Botões de Reação */
+        .reactions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .reactions button {
+            background-color: var(--button-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.1s, background-color 0.2s;
+        }
+
+        .reactions button:hover {
+            background-color: var(--button-hover);
+            transform: scale(1.05);
+        }
+
+        .reactions button:active {
+            transform: scale(0.95);
+        }
+
+        /* Seção de Comentários */
+        .comments-section {
+            background: rgba(0,0,0,0.02);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            border: 1px dashed var(--border-color);
+        }
+        
+        [data-theme="dark"] .comments-section {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .comments-list {
+            margin-bottom: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .comment-item {
+            font-size: 0.95rem;
+            padding: 8px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 5px;
+        }
+
+        .comment-item strong {
+            color: var(--text-muted);
+        }
+
+        .comment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .comment-form input, .comment-form textarea {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+
+        .comment-form button {
+            align-self: flex-end;
+            background-color: var(--bg-header);
+            color: var(--text-header);
+            border: 1px solid var(--border-color);
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Responsividade */
+        @media (max-width: 800px) {
+            .blog-container {
+                flex-direction: column;
+                padding: 10px;
+            }
+
+            .post-header-box {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .reactions {
+                justify-content: center;
+            }
+            
+            header h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <button class="theme-toggle" id="toggleTheme" aria-label="Alternar modo escuro e claro">🌓 Modo Escuro</button>
+    </div>
+
+    <header>
+        <h1>Mundo Otaku & Séries (Blog)</h1>
+        <p>Vou compartilhar conhecimentos sobre animes e séries</p>
+    </header>
+
+    <div class="blog-container">
+        <main>
+            <article>
+                <div class="post-header-box">
+                    <img src="imagem-blog.png" alt="Ilustração em estilo anime de uma garota com cabelo roxo e casaco amarelo, segurando pipoca e controle remoto.">
+                    <div class="post-content">
+                        <h2>Meu primeiro post</h2>
+                        <p class="artigo-autor">Por: Keytin Shadday Díaz Crespo</p>
+                        <p>Boas-vindas ao meu novo blog! Aqui vou compartilhar análises, indicações e curiosidades sobre personagens e enredos que fazem sucesso pelo mundo todo.</p>
+                    </div>
+                </div>
+                
+                <div class="reactions">
+                    <button class="like-btn">❤️ <span>0</span></button>
+                    <button class="like-btn">👍 <span>0</span></button>
+                    <button class="like-btn">👎 <span>0</span></button>
+                    <button class="toggle-comments-btn">💬 Comentários (<span class="comment-count">0</span>)</button>
+                </div>
+
+                <div class="comments-section" style="display: none;">
+                    <div class="comments-list"></div>
+                    <form class="comment-form" onsubmit="adicionarComentario(event, this)">
+                        <input type="text" placeholder="Seu nome..." required>
+                        <textarea placeholder="Escreva seu comentário aqui..." rows="2" required></textarea>
+                        <button type="submit">Enviar</button>
+                    </form>
+                </div>
+            </article>
+
+            <article>
+                <div class="post-header-box">
+                    <img src="nova imagem-blog.png" alt="Ilustração de uma garota assistindo Sailor Moon na TV.">
+                    <div class="post-content">
+                        <h2>Meu segundo post</h2>
+                        <p class="artigo-autor">Por: Keytin Shadday Díaz Crespo</p>
+                        <p>Se você gostou da proposta do blog e quer ficar por dentro de todas as análises, novidades e informações sobre o mundo dos animes e séries, clique no coração aqui embaixo! O feedback de vocês é o que faz o blog crescer.</p>
+                    </div>
+                </div>
+                
+                <div class="reactions">
+                    <button class="like-btn">❤️ <span>0</span></button>
+                    <button class="like-btn">👍 <span>0</span></button>
+                    <button class="like-btn">👎 <span>0</span></button>
+                    <button class="toggle-comments-btn">💬 Comentários (<span class="comment-count">0</span>)</button>
+                </div>
+
+                <div class="comments-section" style="display: none;">
+                    <div class="comments-list"></div>
+                    <form class="comment-form" onsubmit="adicionarComentario(event, this)">
+                        <input type="text" placeholder="Seu nome..." required>
+                        <textarea placeholder="Escreva seu comentário aqui..." rows="2" required></textarea>
+                        <button type="submit">Enviar</button>
+                    </form>
+                </div>
+            </article>
+
+            <article>
+                <div class="post-header-box">
+                    <img src="imagem tres-blog.png" alt="Ilustração em estilo anime de uma garota sorridente com cabelos roxos e casaco amarelo, sentada no sofá segurando um balde de pipoca e um controle remoto de TV. Ao lado dela, há um boneco do Titã Colossal de Attack on Titan. Ao fundo, uma estante cheia de mangás, bonecos colecionáveis (action figures) e um pôster com a escrita AOT">
+                    <div class="post-content">
+                        <h2>Por que Attack on Titan marcou a história dos animes?</h2>
+                        <p class="artigo-autor">Por: Keytin Shadday Díaz Crespo</p>
+                        <p>Hoje vamos falar sobre meu anime favorito, Attack on Titan!</p>
+                        <p>Escrito e ilustrado por Hajime Isayama, <strong>Attack on Titan (Shingeki no Kyojin)</strong> revolucionou a indústria da animação japonesa na última década. A história começa com a humanidade isolada dentro de três grandes muralhas protetoras para se salvar de gigantescos seres devoradores de homens: os Titãs.</p>
+                        <p>O que parecia ser apenas uma narrativa de sobrevivência logo se transforma em um thriller geopolítico complexo, cheio de reviravoltas sobre liberdade, preconceito, ciclos de ódio e escolhas morais cinzentas. Com personagens inesquecíveis como Eren Yeager, Mikasa Ackerman e o Capitão Levi, a obra desafia quem está assistindo a escolher um lado certo. É, sem dúvidas, uma obra-prima moderna que prende do primeiro ao último episódio.</p>
+                    </div>
+                </div>
+                
+                <div class="reactions">
+                    <button class="like-btn">❤️ <span>0</span></button>
+                    <button class="like-btn">👍 <span>0</span></button>
+                    <button class="like-btn">👎 <span>0</span></button>
+                    <button class="toggle-comments-btn">💬 Comentários (<span class="comment-count">0</span>)</button>
+                </div>
+
+                <div class="comments-section" style="display: none;">
+                    <div class="comments-list"></div>
+                    <form class="comment-form" onsubmit="adicionarComentario(event, this)">
+                        <input type="text" placeholder="Seu nome..." required>
+                        <textarea placeholder="Escreva seu comentário aqui..." rows="2" required></textarea>
+                        <button type="submit">Enviar</button>
+                    </form>
+                </div>
+            </article>
+
+            <article>
+                <div class="post-header-box">
+                    <img src="imagem quatro-blog.png" alt="Fotografia em perspectiva de primeira pessoa mostrando uma mão com luva cirúrgica branca apontando um controle remoto para uma televisão antiga de tubo. Na tela da TV, brilha o logotipo vermelho de 'Stranger Things'. Em cima da mesa de madeira, há um saco de pipocas, um crachá de identificação do Laboratório Nacional de Hawkins e uma estátua do monstro Demogorgon. Ao fundo, uma estante de madeira decorada com pôsteres da série, uma lancheira de Dungeons & Dragons, uma caixa de waffles Eggo e uma bicicleta retrô azul.">
+                    <div class="post-content">
+                        <h2>Vocês já viram Stranger Things?</h2>
+                        <p class="artigo-autor">Por: Keytin Shadday Díaz Crespo</p>
+                        <p>Vocês viram sobre a série <strong>Stranger Things</strong>? Se ainda não assistiram, precisam correr para ver! Essa produção da Netflix é simplesmente fantástica e te prende do início ao fim.</p>
+                        <p>Tudo começa nos anos 80, na pequena cidade de Hawkins, quando um garoto chamado Will desaparece misteriosamente. Enquanto seus amigos e a polícia tentam procurá-lo, eles acabam descobrindo experimentos secretos do governo, portais para uma dimensão sombria conhecida como "Mundo Invertido" e uma garota superpoderosa com um passado misterioso chamada Eleven.</p>
+                        <p>A série mistura perfeitamente suspense, ficção científica, monstros assustadores e aquela vibe nostálgica maravilhosa com uma trilha sonora incrível de rock clássico e sintetizadores. É o tipo de produção que faz você maratona sem parar para descobrir os mistérios junto com as crianças. Vale muito a pena dar uma chance!</p>
+                        <p><em>Deixem nos comentários de qual série vocês querem que eu fale no próximo post!</em></p>
+                    </div>
+                </div>
+                
+                <div class="reactions">
+                    <button class="like-btn">❤️ <span>0</span></button>
+                    <button class="like-btn">👍 <span>0</span></button>
+                    <button class="like-btn">👎 <span>0</span></button>
+                    <button class="toggle-comments-btn">💬 Comentários (<span class="comment-count">0</span>)</button>
+                </div>
+
+                <div class="comments-section" style="display: none;">
+                    <div class="comments-list"></div>
+                    <form class="comment-form" onsubmit="adicionarComentario(event, this)">
+                        <input type="text" placeholder="Seu nome..." required>
+                        <textarea placeholder="Escreva seu comentário aqui..." rows="2" required></textarea>
+                        <button type="submit">Enviar</button>
+                    </form>
+                </div>
+            </article>
+        </main>
+
+        <aside>
+            <h3>Sobre o Blog</h3>
+            <p>Seja muito bem-vindo ao <strong>Mundo Otaku & Séries</strong>! Este espaço foi criado especialmente para reunir fãs da cultura pop, das animações asiáticas e das produções ocidentais.</p>
+            <p>Aqui você encontrará reviews honestas, notícias quentes, teorias mirabolantes e listas com recomendações especiais de maratona.</p>
+            <h3>Autoria</h3>
+            <p style="font-weight: bold; margin-bottom: 5px;">Keytin Shadday</p>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0;">Criadora de conteúdo e maratonista profissional de animes nas horas vagas.</p>
+        </aside>
+    </div>
+
+    <script>
+        // Lógica existente para os botões de curtir
+        const botoesCurtir = document.querySelectorAll(".like-btn");
+        botoesCurtir.forEach(function(botao){
+            let curtiu = false;
+            botao.addEventListener("click", function(){
+                let texto = botao.querySelector("span");
+                if (curtiu === false){
+                    texto.textContent++;
+                    curtiu = true;
+                } else {
+                    texto.textContent--;
+                    curtiu = false;
+                }
+            });
+        });
+
+        // Nova lógica para exibir/ocultar a caixa de comentários
+        const botoesComentario = document.querySelectorAll(".toggle-comments-btn");
+        botoesComentario.forEach(function(botao) {
+            botao.addEventListener("click", function() {
+                const artigo = botao.closest("article");
+                const caixaComentarios = artigo.querySelector(".comments-section");
+                
+                if (caixaComentarios.style.display === "none") {
+                    caixaComentarios.style.display = "block";
+                } else {
+                    caixaComentarios.style.display = "none";
+                }
+            });
+        });
+
+        // Função executada quando o usuário envia um comentário
+        function adicionarComentario(event, formulario) {
+            event.preventDefault(); 
+            
+            const inputs = formulario.querySelectorAll("input, textarea");
+            const nome = inputs[0].value;
+            const texto = inputs[1].value;
+
+            const artigo = formulario.closest("article");
+            const listaComentarios = artigo.querySelector(".comments-list");
+            const contadorTexto = artigo.querySelector(".comment-count");
+
+            const novoComentario = document.createElement("div");
+            novoComentario.classList.add("comment-item");
+            novoComentario.innerHTML = `<strong>${nome}:</strong> <span>${texto}</span>`;
+
+            listaComentarios.appendChild(novoComentario);
+            contadorTexto.textContent = parseInt(contadorTexto.textContent) + 1;
+            formulario.reset();
+        }
+
+        // Nova lógica para alternar o modo claro e escuro
+        const toggleBtn = document.getElementById("toggleTheme");
+        
+        toggleBtn.addEventListener("click", () => {
+            const currentTheme = document.documentElement.getAttribute("data-theme");
+            if (currentTheme === "dark") {
+                document.documentElement.removeAttribute("data-theme");
+                toggleBtn.textContent = "🌓 Modo Escuro";
+            } else {
+                document.documentElement.setAttribute("data-theme", "dark");
+                toggleBtn.textContent = "☀️ Modo Claro";
+            }
+        });
+    </script>
+</body>
+</html>
